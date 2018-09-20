@@ -6,7 +6,7 @@ import AddArticle from './components/article/addArticle'
 
 const App = () => {
   return (
-    <Layout className="container-body" style={{ height: '100vh' }}>
+    <Layout className="container-body">
         <Header />
         <AddArticle />
         <Footer />
