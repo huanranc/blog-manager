@@ -1,19 +1,16 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import {Editor, EditorState} from 'draft-js';
+import React from 'react';
+import { Layout } from 'antd';
+import Header from './components/layout/header/index'
+import Footer from './components/layout/footer/index'
+import AddArticle from './components/article/addArticle'
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {editorState: EditorState.createEmpty()};
-    this.onChange = (editorState) => this.setState({editorState});
-  }
-  render() {
-    return (
-        <Editor editorState={this.state.editorState} onChange={this.onChange} />
-    );
-  }
-}
-
+const App = () => {
+  return (
+    <Layout className="container-body" style={{ height: '100vh' }}>
+        <Header />
+        <AddArticle />
+        <Footer />
+    </Layout>
+  );
+};
 export default App;
