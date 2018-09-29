@@ -26,11 +26,26 @@ class ManageArticle extends Component {
       response.json().then(json => json.posts.map(item => {
           let newItem = {}
           newItem.id = item.id
-          newItem.taxonomy = item.taxonomyId
+          newItem.key = item.id
           newItem.title = item.title
           newItem.excerpt = item.excerpt
           newItem.time = this.timeCreate(item.date)
           newItem.status = item.status
+          fetch('/term', {
+            method: 'post',
+            credentials: 'include',
+            mode: 'cors',
+            body: item.id
+          }).then(res => {
+            if (res.status !== 200) {
+              throw new Error('未请求成功，状态码为' + res.status)
+            }
+            res.json().then(json => {
+              newItem.tags = json.message.term.split(','),
+              newItem.nameTaxo = json.message.nameTaxo,
+              newItem.taxonmyDes = json.message.taxonmyDes
+            })
+          })
           data.push(newItem)
           return this.setState({
             article: [data]
@@ -51,8 +66,8 @@ class ManageArticle extends Component {
   render() {
     const columns = [{
       title: '文章分类',
-      dataIndex: 'taxonomy',
-      key: 'taxonomy',
+      dataIndex: 'nameTaxo',
+      key: 'nameTaxo',
       render: text => <a href="javascript:;">{text}</a>,
     }, {
       title: '文章标题',
@@ -63,16 +78,16 @@ class ManageArticle extends Component {
       dataIndex: 'excerpt',
       key: 'excerpt',
     }, 
-    // {
-    //   title: '标签',
-    //   key: 'tags',
-    //   dataIndex: 'tags',
-    //   render: tags => (
-    //     <span>
-    //       {tags.map(tag => <Tag color="blue" key={tag}>{tag}</Tag>)}
-    //     </span>
-    //   ),
-    // }, 
+    {
+      title: '标签',
+      key: 'tags',
+      dataIndex: 'tags',
+      render: tags => (
+        <span>
+          {tags!==undefined?tags.map(tag => <Tag color="blue" key={tags}>{tags}</Tag>): ''}
+        </span>
+      ),
+    }, 
     {
       title: '发表时间',
       dataIndex: 'time',
@@ -97,15 +112,8 @@ class ManageArticle extends Component {
 
     const {article} = this.state;
     let data = []
-    article.length > 0 ? article[0].map(item => {
-      let newItem = {}
-          newItem.key = item.id
-          newItem.taxonomy = item.taxonomy
-          newItem.title = item.title
-          newItem.excerpt = item.excerpt
-          newItem.time = item.time
-          newItem.status = item.status?'显示':'隐藏'
-          data.push(newItem)
+    article.length > 0 ? article[0].map(items => {
+          data.push(items)
     }):{}
     // const data = [{
     //   key: '1',
@@ -116,7 +124,7 @@ class ManageArticle extends Component {
     //   time: '2018/9/18',
     //   tags: ['nice', 'developer']
     // }];
-    
+    console.log(data.nameTaxo)
     const { Content } = Layout;
     return (
       <Content style={{ padding: '0 50px' }}>
