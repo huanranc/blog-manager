@@ -4,6 +4,7 @@ import { Layout, Breadcrumb, Table, Divider, Tag } from 'antd';
 class ManageArticle extends Component {
   constructor(props) {
     super(props);
+    this.nameTaxoAll = ['学习','生活','转载']
     this.state = {
       article: ''
     }
@@ -29,23 +30,10 @@ class ManageArticle extends Component {
           newItem.key = item.id
           newItem.title = item.title
           newItem.excerpt = item.excerpt
+          newItem.nameTaxo = this.nameTaxoAll[item.taxonomyId - 1]
+          newItem.tags = item.tags.split(',')
           newItem.time = this.timeCreate(item.date)
-          newItem.status = item.status
-          fetch('/term', {
-            method: 'post',
-            credentials: 'include',
-            mode: 'cors',
-            body: item.id
-          }).then(res => {
-            if (res.status !== 200) {
-              throw new Error('未请求成功，状态码为' + res.status)
-            }
-            res.json().then(json => {
-              newItem.tags = json.message.term.split(','),
-              newItem.nameTaxo = json.message.nameTaxo,
-              newItem.taxonmyDes = json.message.taxonmyDes
-            })
-          })
+          newItem.status = item.status ? "显示":"隐藏"
           data.push(newItem)
           return this.setState({
             article: [data]
@@ -84,7 +72,7 @@ class ManageArticle extends Component {
       dataIndex: 'tags',
       render: tags => (
         <span>
-          {tags!==undefined?tags.map(tag => <Tag color="blue" key={tags}>{tags}</Tag>): ''}
+          {tags.map(tag => <Tag color="blue" key={tag}>{tag}</Tag>)}
         </span>
       ),
     }, 
@@ -106,6 +94,8 @@ class ManageArticle extends Component {
       render: () => (
         <span>
           <a href="javascript:;">编辑</a>
+          <Divider type="vertical" />
+          <a href="javascript:;">删除</a>
         </span>
       ),
     }];
@@ -115,16 +105,6 @@ class ManageArticle extends Component {
     article.length > 0 ? article[0].map(items => {
           data.push(items)
     }):{}
-    // const data = [{
-    //   key: '1',
-    //   taxonomy: 'John Brown',
-    //   title: '文章',
-    //   excerpt: 'New York No. 1 Lake Park',
-    //   status: '显示',
-    //   time: '2018/9/18',
-    //   tags: ['nice', 'developer']
-    // }];
-    console.log(data.nameTaxo)
     const { Content } = Layout;
     return (
       <Content style={{ padding: '0 50px' }}>

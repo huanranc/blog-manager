@@ -60,9 +60,10 @@ class AddArticle extends Component {
 
   addPost = (values) => {
     let data = {
-      author:values.author,
-      taxonomyId:values.taxonomyId,
-      name:this.state.tags.toString(),
+      author: values.author,
+      taxonomyId: values.taxonomyId,
+      tags: this.state.tags.toString(),
+      name: this.state.tags.toString(),
       title: values.title,
       excerpt: values.excerpt,
       content: values.content.toHTML()
@@ -99,7 +100,7 @@ class AddArticle extends Component {
     const editorProps = {
       contentFormat: 'html',
       initialContent: '',
-      height: 400,
+      height: 300,
       media: {
         image: true, // 开启图片插入功能
         uploadFn: this.uploadFn // 指定上传函数，说明见下文
