@@ -85,7 +85,7 @@ class AddArticle extends Component {
       }
       response.json().then( json => {
           console.log(`请求成功，状态码为${response.status}`)
-          message.success('发表文章成功！', 20);
+          setTimeout(message.success('发表文章成功！', 20), 1000);
         }
       )
     })
