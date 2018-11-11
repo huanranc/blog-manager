@@ -99,7 +99,6 @@ class AddArticle extends Component {
     const { getFieldDecorator } = this.props.form
     const editorProps = {
       contentFormat: 'html',
-      initialContent: '',
       height: 300,
       media: {
         image: true, // 开启图片插入功能
